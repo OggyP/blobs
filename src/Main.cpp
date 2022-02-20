@@ -22,7 +22,7 @@ int main()
 	window.create(sf::VideoMode(screenSize[0] * screenScalingFactor, screenSize[1] * screenScalingFactor), "Blob Thingo!");
 	window.create(sf::VideoMode(1680, 1050), "Blob Thingo!", sf::Style::Resize | sf::Style::Fullscreen | sf::Style::Close);
 #else
-	window.create(sfsf::VideoMode(0, 0), "Blob Thingo!", sf::Style::Resize | sf::Style::Close);
+	window.create(sf::VideoMode(0, 0), "Blob Thingo!", sf::Style::Resize | sf::Style::Close);
 	platform.toggleFullscreen(window.getSystemHandle(), sf::Style::Fullscreen, false, sf::Vector2u(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height));
 #endif
 	window.create(sf::VideoMode(window.getSize().x, window.getSize().y), "Blob Thingo!");
