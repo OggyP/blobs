@@ -17,6 +17,7 @@ int main()
 	sf::RenderWindow window;
 	// in Windows at least, this must be called before creating the window
 	float screenScalingFactor = platform.getScreenScalingFactor(window.getSystemHandle());
+	UNUSED(screenScalingFactor);
 	// Use the screenScalingFactor
 #if defined(__linux__)
 	window.create(sf::VideoMode(screenSize[0] * screenScalingFactor, screenSize[1] * screenScalingFactor), "Blob Thingo!");
