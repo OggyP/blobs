@@ -1,7 +1,7 @@
 #include "Platform/Platform.hpp"
 
 #define maxIterations 1000
-#define POINTSAMOUNT 100
+#define POINTSAMOUNT 150
 
 const int screenSize[2] = { 1500, 1000 };
 
@@ -20,9 +20,9 @@ int main()
 	// Use the screenScalingFactor
 #if defined(__linux__)
 	window.create(sf::VideoMode(screenSize[0] * screenScalingFactor, screenSize[1] * screenScalingFactor), "Blob Thingo!");
-	window.create(sf::VideoMode(1680, 1050), "Blob Thingo", sf::Style::Resize | sf::Style::Fullscreen | sf::Style::Close);
+	window.create(sf::VideoMode(1680, 1050), "Blob Thingo!", sf::Style::Resize | sf::Style::Fullscreen | sf::Style::Close);
 #else
-	window.create(sfsf::VideoMode(0, 0), "Blob Thingo", sf::Style::Resize | sf::Style::Close);
+	window.create(sfsf::VideoMode(0, 0), "Blob Thingo!", sf::Style::Resize | sf::Style::Close);
 	platform.toggleFullscreen(window.getSystemHandle(), sf::Style::Fullscreen, false, sf::Vector2u(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height));
 #endif
 	window.create(sf::VideoMode(window.getSize().x, window.getSize().y), "Blob Thingo!");
@@ -66,6 +66,8 @@ int main()
 	sf::Glsl::Vec2 points[POINTSAMOUNT];
 	sf::Glsl::Vec2 pointsMoveVec[POINTSAMOUNT];
 	float pointsMag[POINTSAMOUNT];
+
+	srand(time(0));
 
 	for (size_t i = 0; i < POINTSAMOUNT; i++)
 	{
