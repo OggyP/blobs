@@ -17,19 +17,25 @@ int main()
 	sf::RenderWindow window;
 	// in Windows at least, this must be called before creating the window
 	float screenScalingFactor = platform.getScreenScalingFactor(window.getSystemHandle());
-	const sf::Vector2f scaledScreenSize(screenSize[0] * screenScalingFactor, screenSize[1] * screenScalingFactor);
 	// Use the screenScalingFactor
-	window.create(sf::VideoMode(scaledScreenSize.x, scaledScreenSize.y), "Blob Thingo!");
+#if defined(__linux__)
+	window.create(sf::VideoMode(screenSize[0] * screenScalingFactor, screenSize[1] * screenScalingFactor), "Blob Thingo!");
+	window.create(sf::VideoMode(1680, 1050), "Blob Thingo", sf::Style::Resize | sf::Style::Fullscreen | sf::Style::Close);
+#else
+	window.create(sfsf::VideoMode(0, 0), "Blob Thingo", sf::Style::Resize | sf::Style::Close);
+	platform.toggleFullscreen(window.getSystemHandle(), sf::Style::Fullscreen, false, sf::Vector2u(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height));
+#endif
+	window.create(sf::VideoMode(window.getSize().x, window.getSize().y), "Blob Thingo!");
 	window.setFramerateLimit(60);
 	platform.setIcon(window.getSystemHandle());
 
-	background.create(screenSize[0] * screenScalingFactor, screenSize[1] * screenScalingFactor);
+	background.create(window.getSize().x, window.getSize().y);
 
 	sf::RectangleShape rect;
 	rect.setSize(sf::Vector2f(1, 1));
 
 	sf::RectangleShape backgroundRect;
-	backgroundRect.setSize(scaledScreenSize);
+	backgroundRect.setSize(sf::Vector2f(window.getSize()));
 	backgroundRect.setPosition(sf::Vector2f(0, 0));
 
 	sf::CircleShape circle(2);
@@ -55,7 +61,7 @@ int main()
 		std::cout << "Shaders are not available\n";
 	}
 
-	shader.setUniform("resolution", scaledScreenSize);
+	shader.setUniform("resolution", sf::Vector2f(window.getSize()));
 
 	sf::Glsl::Vec2 points[POINTSAMOUNT];
 	sf::Glsl::Vec2 pointsMoveVec[POINTSAMOUNT];
@@ -63,7 +69,7 @@ int main()
 
 	for (size_t i = 0; i < POINTSAMOUNT; i++)
 	{
-		points[i] = sf::Glsl::Vec2(static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (screenSize[0] * screenScalingFactor))), static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (screenSize[1] * screenScalingFactor))));
+		points[i] = sf::Glsl::Vec2(static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (window.getSize().x))), static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (window.getSize().y))));
 		pointsMoveVec[i] = sf::Glsl::Vec2(-1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (2.0f))), -1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (2.0f))));
 		pointsMag[i] = 1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (29.0f)));
 	}
@@ -83,11 +89,11 @@ int main()
 			const auto currentPoint = &points[i];
 			const auto moveVec = &pointsMoveVec[i];
 			*currentPoint += *moveVec / 10.0f;
-			if (currentPoint->x > scaledScreenSize.x && moveVec->x > 0)
+			if (currentPoint->x > window.getSize().x && moveVec->x > 0)
 				moveVec->x = -moveVec->x;
 			else if (currentPoint->x < 0 && moveVec->x < 0)
 				moveVec->x = -moveVec->x;
-			else if (currentPoint->y > scaledScreenSize.y && moveVec->y > 0)
+			else if (currentPoint->y > window.getSize().y && moveVec->y > 0)
 				moveVec->y = -moveVec->y;
 			else if (currentPoint->y < 0 && moveVec->y < 0)
 				moveVec->y = -moveVec->y;
@@ -98,11 +104,11 @@ int main()
 		shader.setUniformArray("pointsMag", pointsMag, POINTSAMOUNT);
 		background.draw(backgroundRect, &shader);
 
-		for (size_t i = 0; i < POINTSAMOUNT; i++)
-		{
-			circle.setPosition(points[i]);
-			background.draw(circle);
-		}
+		// for (size_t i = 0; i < POINTSAMOUNT; i++)
+		// {
+		// 	circle.setPosition(points[i]);
+		// 	background.draw(circle);
+		// }
 
 		const auto texture = background.getTexture();
 		backgroundRect.setTexture(&texture);
