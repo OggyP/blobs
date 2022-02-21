@@ -1,7 +1,7 @@
 #include "Platform/Platform.hpp"
 
 #define maxIterations 1000
-#define POINTSAMOUNT 150
+#define POINTSAMOUNT 50
 
 const int screenSize[2] = { 1500, 1000 };
 
@@ -74,7 +74,7 @@ int main()
 	{
 		points[i] = sf::Glsl::Vec2(static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (window.getSize().x))), static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (window.getSize().y))));
 		pointsMoveVec[i] = sf::Glsl::Vec2(-1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (2.0f))), -1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (2.0f))));
-		pointsMag[i] = 1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (29.0f)));
+		pointsMag[i] = 20.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (50.0f)));
 	}
 
 	sf::Event event;
@@ -91,7 +91,7 @@ int main()
 		{
 			const auto currentPoint = &points[i];
 			const auto moveVec = &pointsMoveVec[i];
-			*currentPoint += *moveVec / 10.0f;
+			*currentPoint += *moveVec / 0.06f;
 			if (currentPoint->x > window.getSize().x && moveVec->x > 0)
 				moveVec->x = -moveVec->x;
 			else if (currentPoint->x < 0 && moveVec->x < 0)
